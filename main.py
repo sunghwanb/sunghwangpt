@@ -10,7 +10,7 @@ import glob
 load_dotenv()
 
 
-st.title("나만의 챗GPT💬")
+st.title("상일여고 배성환님만의 챗GPT💬")
 
 
 # 처음 1번만 실행하기 위한 코드
