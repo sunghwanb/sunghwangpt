@@ -5,12 +5,30 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_teddynote.prompts import load_prompt
 from dotenv import load_dotenv
 import glob
+import settings
 
 # API KEY 정보로드
-load_dotenv()
+#load_dotenv()
 
-
+# python -m streamlit run main.py
 st.title("상일여고 배성환님만의 챗GPT💬")
+
+config = settings.load_config()
+if "api_key" in config:
+    st.session_state.api_key = config["api_key"]
+    st.write(f'사용자 입력 API키 : {st.session_state.api_key[-5:]}')
+else : 
+    st.session_state.api_key = st.secrets["openai_api_key"]
+    st.write(f'API키 : {st.secrets["openai_api_key"][-5:]}')
+main_text = st.empty()
+
+api_key = st.text_input("🔑 새로운 OPENAI API Key", type="password")
+save_btn = st.button("설정 저장", key="save_btn")
+
+if save_btn:
+    settings.save_config({"api_key": api_key})
+    st.session_state.api_key = api_key
+    st.write("설정이 저장되었습니다.")
 
 
 # 처음 1번만 실행하기 위한 코드
@@ -49,7 +67,8 @@ def create_chain(prompt_filepath, task=""):
         prompt = prompt.partial(task=task)
 
     # GPT
-    llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
+    #llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
+    llm = ChatOpenAI(model_name="gpt-4o", temperature=0, api_key=st.session_state.api_key)
 
     # 출력 파서
     output_parser = StrOutputParser()
