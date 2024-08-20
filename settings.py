@@ -1,7 +1,7 @@
 import json
 import os
 
-SETTING_DIR = "./.settings"
+SETTING_DIR = "./"
 
 
 def load_config(filename="config.json"):
